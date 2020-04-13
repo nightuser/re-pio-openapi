@@ -32,6 +32,7 @@ paths:
           application/json:
             schema:
               type: object
+        description: ''
   '/device/{deviceId}/monitor':
     parameters:
       - schema:
@@ -122,3 +123,6 @@ components:
           refreshUrl: 'https://example.com/oauth2/refresh'
           scopes:
             all: ''
+      description: ''
+security:
+  - OAuth2: []
