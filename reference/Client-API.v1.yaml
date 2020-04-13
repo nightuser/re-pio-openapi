@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: Client API
+  version: '1.0'
+  license:
+    name: Apache 2.0
+  description: ''
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /device/list:
+    get:
+      summary: Device List
+      tags:
+        - Device
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        '401':
+          description: Unauthorized
+      operationId: get-device-list
+      description: Get the list of available devices
+      requestBody: {}
+  '/device/{deviceId}/monitor':
+    parameters:
+      - schema:
+          type: integer
+          format: int32
+          minimum: 0
+        name: deviceId
+        in: path
+        required: true
+        description: Device ID
+    get:
+      summary: Device Monitor
+      tags:
+        - Device
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the device
+                  socketAddr:
+                    type: string
+                    description: URL to the WebSocket
+      operationId: get-device-id-monitor
+      parameters: []
+  '/run/{deviceId}':
+    parameters:
+      - schema:
+          type: integer
+          minimum: 0
+          format: int32
+        name: deviceId
+        in: path
+        description: "ID of the device. If empty and user has only one device, then it's used. Otherwise, the eror is returned."
+    get:
+      summary: Run
+      tags:
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  string:
+                    type: string
+                    description: Stream to the output of the command
+        '404':
+          description: Unknown target
+      operationId: get-run-target
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: target
+          description: Target to run on the device
+      description: Runs target on the device
+components:
+  schemas:
+    Device:
+      title: Device
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          minimum: 0
+          description: ID of the device
+        name:
+          type: string
+          description: Optional fancy name of the device
+      required:
+        - id
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://example.com/oauth2/authorize'
+          tokenUrl: 'https://example.com/oauth2/token'
+          refreshUrl: 'https://example.com/oauth2/refresh'
+          scopes:
+            all: ''
