@@ -27,7 +27,11 @@ paths:
           description: Unauthorized
       operationId: get-device-list
       description: Get the list of available devices
-      requestBody: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
   '/device/{deviceId}/monitor':
     parameters:
       - schema:
