@@ -135,9 +135,7 @@ components:
           scopes:
             all: ''
       description: ''
-security:
-  - OAuth2:
-      - all
+security: []
 tags:
   - name: Device
   - name: Run
