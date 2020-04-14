@@ -4,7 +4,10 @@ info:
   version: '1.0'
   license:
     name: Apache 2.0
-  description: ''
+  description: "A Client's API for an open-source PlatformIO remote device management  "
+  contact:
+    name: nightuser
+    url: 'https://github.com/nightuser/re-pio-openapi/'
 servers:
   - url: 'http://localhost:3000'
 paths:
@@ -63,15 +66,9 @@ paths:
                     description: URL to the WebSocket
       operationId: get-device-id-monitor
       parameters: []
-  '/run/{deviceId}':
-    parameters:
-      - schema:
-          type: integer
-          minimum: 0
-          format: int32
-        name: deviceId
-        in: path
-        description: "ID of the device. If empty and user has only one device, then it's used. Otherwise, the eror is returned."
+      description: 'Get a socket to the serial monitor of the specified device  '
+  /run:
+    parameters: []
     get:
       summary: Run
       tags:
@@ -82,15 +79,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  string:
-                    type: string
-                    description: Stream to the output of the command
+                $ref: '#/components/schemas/WebSocketURI'
+              examples: {}
         '404':
           description: Unknown target
       operationId: get-run-target
       parameters:
+        - schema:
+            type: integer
+            minimum: 0
+            format: int32
+          in: query
+          name: deviceId
+          description: "ID of the device. If empty and user has only one device, then it's used. Otherwise, the eror is returned."
         - schema:
             type: string
           in: query
@@ -113,6 +114,16 @@ components:
           description: Optional fancy name of the device
       required:
         - id
+      description: A generic device description
+      x-tags:
+        - Device
+    WebSocketURI:
+      title: WebSocketURI
+      type: object
+      properties:
+        address:
+          type: string
+      description: An address of the WebSocket
   securitySchemes:
     OAuth2:
       type: oauth2
@@ -125,4 +136,8 @@ components:
             all: ''
       description: ''
 security:
-  - OAuth2: []
+  - OAuth2:
+      - all
+tags:
+  - name: Device
+  - name: Run
